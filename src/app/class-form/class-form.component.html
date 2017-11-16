@@ -1,0 +1,56 @@
+<h2>Hero Detail</h2>
+<h3>
+  <i>FormControl in a FormGroup</i>
+</h3>
+<form [formGroup]="classForm" novalidate>
+  <div formArrayName="classes" class="well well-lg">
+    <div *ngFor="let student-class of classes.controls; let i=index" [formGroupName]="i">
+      <div class="form-group">
+        <label class="center-block">Name:
+          <input class="form-control" formControlName="name">
+
+        </label>
+        <div class="form-group">
+          <label class="center-block">Priority:
+            <input type="number" class="form-control" formControlName="priority">
+          </label>
+        </div>
+      </div>
+      <div formArrayName="sections" class="well well-lg">
+        <div *ngFor="let section of student-class.controls; let i=index" [formGroupName]="i">
+          <h4>Section #{{i + 1}}</h4>
+          <div style="margin-left: 1em;">
+            <div class="form-group">
+              <label class="center-block">Section Name:
+                <input class="form-control" formControlName="name">
+              </label>
+            </div>
+            <div *ngFor="let time of sections.times; let j=index" [formGroupName]="j"></div>
+            <h4>Time #{{j + 1}}</h4>
+            <div style="margin-left: 1em;">
+              <div class="form-group">
+                <label class="center-block">Select a day:
+                  <select class="form-control" formControlName="day">
+                    <option>Sunday</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </div>
+      
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  
+  <p>Form value: {{ classForm.value | json }}</p>
+  <p>Form status: {{ classForm.status | json }}</p>
+</form>
