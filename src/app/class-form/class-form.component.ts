@@ -11,32 +11,98 @@ import { StudentClass } from '../student-class';
 })
 export class ClassFormComponent implements OnInit {
   classForm: FormGroup;
-  classesArray: FormArray
+  classesArray: FormArray;
+  sectionArray: FormArray;
+  timeArray: FormArray;
   constructor(private fb: FormBuilder) {
     this.createForm()
   }
 
-  createForm() {
-    this.classesArray = new FormArray([])
-    this.classesArray.push(this.fb.group(new StudentClass(this.fb.group(new Section()))))
-    this.classForm = this.fb.group({
-      classes: this.classesArray
-    })
+  // createForm() {
+  //   this.timeArray = new FormArray([])
+  //   this.timeArray.push(this.fb.group(new Time()))
+  //   this.sectionArray = new FormArray([])
+  //   this.sectionArray.push(this.fb.group(new Section(this.timeArray)))
+  //   this.classesArray = new FormArray([])
+  //   this.classesArray.push(this.fb.group(new StudentClass(this.sectionArray)))
 
-  }
-  // setClasses(classes: StudentClass[]) {
-  //   const classFGs = []
-  //   classFGs.push(new StudentClass())
-  //   const classFormArray = this.fb.array(classFGs);
-  //   this.classForm.setControl('classes', classFormArray);
+  //   this.classForm = this.fb.group({
+  //     classes: this.classesArray
+  //   })
+
   // }
+
+  createForm() {
+    this.classForm = this.fb.group({
+      classes: this.fb.array([
+        this.initClass()
+      ])
+    })
+  }
+
+  initClass() {
+    return this.fb.group({
+      name: ['', Validators.required],
+      priority: ['', Validators.required],
+      sections: this.fb.array([
+        this.initSection()
+      ])
+    })
+  }
+
+  initSection() {
+    return this.fb.group({
+      name: ['', Validators.required],
+      times: this.fb.array([
+        this.initTime()
+      ])
+    })
+  }
+
+  initTime() {
+    return this.fb.group({
+      day: ['Sunday', Validators.required],
+      start_time: ['', Validators.required],
+      end_time: ['', Validators.required],
+    })
+  }
+
   get classes(): FormArray {
     return this.classForm.get('classes') as FormArray;
   };
+
+  addClass() {
+    const control = <FormArray>this.classes
+    control.push(this.initClass())
+  }
+
+  addSection(class_number: number) {
+    const control = <FormArray>this.classes.controls[class_number]['controls'].sections
+    control.push(this.initSection())
+  }
+
+  addTime(class_number: number, section_number: number){
+    const control = <FormArray>this.classes.controls[class_number]['controls'].sections['controls'][section_number]['controls'].times
+    control.push(this.initTime())
+  }
+
+
+  generateSchedules(){
+    const classes = this.classes.value
+    console.log(this.classes)
+  }
   ngOnInit() {
     // this.classes.push(this.fb.group(new StudentClass()))
-
-    console.log(this.classes)
+    // for (let student_class of this.classes.controls) {
+    //   console.log(student_class)
+    //   for (let section of student_class.value.sections.controls) {
+    //     console.log(section)
+    //     for (let time of section.controls.times.controls) {
+    //       console.log(time)
+    //     }
+    //   }
+    // }
+    // console.log(this.classes)
   }
 
 }

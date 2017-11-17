@@ -1,10 +1,8 @@
-<h2>Hero Detail</h2>
-<h3>
-  <i>FormControl in a FormGroup</i>
-</h3>
+
 <form [formGroup]="classForm" novalidate>
   <div formArrayName="classes" class="well well-lg">
-    <div *ngFor="let student-class of classes.controls; let i=index" [formGroupName]="i">
+    <div *ngFor="let student_class of classes.controls; let i=index" [formGroupName]="i">
+        <h4>Class #{{i + 1}}</h4>
       <div class="form-group">
         <label class="center-block">Name:
           <input class="form-control" formControlName="name">
@@ -17,39 +15,53 @@
         </div>
       </div>
       <div formArrayName="sections" class="well well-lg">
-        <div *ngFor="let section of student-class.controls; let i=index" [formGroupName]="i">
-          <h4>Section #{{i + 1}}</h4>
+        <div *ngFor="let section of student_class.controls.sections.controls; let j=index" [formGroupName]='j'>
+          <h4>Section #{{j + 1}}</h4>
           <div style="margin-left: 1em;">
             <div class="form-group">
               <label class="center-block">Section Name:
                 <input class="form-control" formControlName="name">
               </label>
             </div>
-            <div *ngFor="let time of sections.times; let j=index" [formGroupName]="j"></div>
-            <h4>Time #{{j + 1}}</h4>
-            <div style="margin-left: 1em;">
-              <div class="form-group">
-                <label class="center-block">Select a day:
-                  <select class="form-control" formControlName="day">
-                    <option>Sunday</option>
-                    <option>Monday</option>
-                    <option>Tuesday</option>
-                    <option>Wednesday</option>
-                    <option>Thursday</option>
-                    <option>Friday</option>
-                    <option>Saturday</option>
-                  </select>
-                </label>
+            <div formArrayName="times" class="well well-lg">
+              <div *ngFor="let time of section.controls.times.controls; let k=index" [formGroupName]="k">
+                <h4>Time #{{k + 1}}</h4>
+                <div style="margin-left: 1em;">
+                  <div class="form-group">
+                    <label class="center-block">Select a day:
+                      <select class="form-control" formControlName="day">
+                        <option>Sunday</option>
+                        <option>Monday</option>
+                        <option>Tuesday</option>
+                        <option>Wednesday</option>
+                        <option>Thursday</option>
+                        <option>Friday</option>
+                        <option>Saturday</option>
+                      </select>
+                    </label>
+                    <label class="center-block">Start Time:
+                      <input type="time" class="form-control" formControlName="start_time">
+                    </label>
+                    <label class="center-block">End Time:
+                      <input type="time" class="form-control" formControlName="end_time">
+                    </label>
+                  </div>
+                </div>
               </div>
+              <button (click)="addTime(i, j)" class="btn btn-default" type="button">Add Time</button>
             </div>
-          </div>
-      
-        </div>
-      </div>
-    </div>
 
+          </div>
+
+        </div>
+        <button (click)="addSection(i)" class="btn btn-default" type="button">Add Section</button>
+      </div>
+
+    </div>
+    <button (click)="addClass()" class="btn btn-default" type="button">Add Class</button>
   </div>
 
+  <button (click)="generateSchedules()" class="btn btn-info" type="button">Generate!</button>
   
   <p>Form value: {{ classForm.value | json }}</p>
   <p>Form status: {{ classForm.status | json }}</p>

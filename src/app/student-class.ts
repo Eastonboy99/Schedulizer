@@ -4,10 +4,10 @@ export class StudentClass {
     name: string;
     priority: number;
     sections: Section[];
-    constructor( sections:any){
+    constructor( initSections:any){
         this.name = ""
         this.priority = 1
         this.sections=[]
-        this.sections.push(sections)
+        this.sections.push(initSections)
     }
 }

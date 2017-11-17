@@ -3,11 +3,11 @@ import { Time } from './time'
 
 export class Section{
     name: string;
-    times: Time[] = [];
+    times: Time[];
 
-    constructor(){
-        this.name = ""
+    constructor(initTimes:any){
+        this.name = "test"
         this.times = []
-        this.times.push(new Time())
+        this.times.push(initTimes)
     }
 }
