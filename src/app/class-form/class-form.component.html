@@ -1,8 +1,7 @@
-
 <form [formGroup]="classForm" novalidate>
   <div formArrayName="classes" class="well well-lg">
     <div *ngFor="let student_class of classes.controls; let i=index" [formGroupName]="i">
-        <h4>Class #{{i + 1}}</h4>
+      <h4>Class #{{i + 1}}</h4>
       <div class="form-group">
         <label class="center-block">Name:
           <input class="form-control" formControlName="name">
@@ -60,9 +59,18 @@
     </div>
     <button (click)="addClass()" class="btn btn-default" type="button">Add Class</button>
   </div>
+  <div class="form-group">
+    <label class="center-block">Max Number of Classes:
+      <select class="form-control" formControlName="classes_per_schedule">
+        <option *ngFor="let student_class of classes.controls; let l=index" [value]="l">{{l + 1}}</option>
+      </select>
+    </label>
+
+  </div>
 
   <button (click)="generateSchedules()" class="btn btn-info" type="button">Generate!</button>
-  
+
   <p>Form value: {{ classForm.value | json }}</p>
   <p>Form status: {{ classForm.status | json }}</p>
 </form>
+
