@@ -13,6 +13,7 @@ export class ClassFormComponent implements OnInit {
   classesArray: FormArray;
   sectionArray: FormArray;
   timeArray: FormArray;
+  eventsSchedules: any;
   constructor(private fb: FormBuilder) {
     this.createForm()
     this.debug()
@@ -202,13 +203,21 @@ export class ClassFormComponent implements OnInit {
       schedules.push(new_schedule)
     }
     console.log(schedules)
-    let eventsSchedules = []
+    this.eventsSchedules = []
     let counter = 0;
     for (let schedule of schedules[schedules.length - 1]) {
-      eventsSchedules.push([])
+      this.eventsSchedules.push({
+        height: 650,
+        fixedWeekCount: false,
+        eventLimit: true, // allow "more" link when too many events
+        defaultView: 'agendaWeek',
+        minTime: "07:00:00",
+        maxTime: "23:00:00",
+        events: []
+      })
       for (let college_class of schedule) {
         for (let time of college_class.times) {
-          eventsSchedules[counter].push({
+          this.eventsSchedules[counter].events.push({
             title: college_class.class_name,
             start: time.start_time,
             end: time.end_time
@@ -217,8 +226,12 @@ export class ClassFormComponent implements OnInit {
       }
       counter++;
     }
-    console.log(eventsSchedules)
-    
+    console.log(this.eventsSchedules)
+
+  }
+
+  getEventsSchedules() {
+    return this.eventsSchedules
   }
 
   arraysEqual(arr1, arr2) {

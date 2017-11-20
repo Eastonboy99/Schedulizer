@@ -77,7 +77,8 @@
 <div *ngIf="eventsSchedules">
   hello
   <div *ngFor="let schedule of eventsSchedules; let l=index">
-      <app-schedules-display [events]="schedule"></app-schedules-display>
+    <p>Schedule: {{schedule | json }}</p>
+      <app-schedules-display [calendarOptions]="schedule"></app-schedules-display>
   </div>
   
 </div>
