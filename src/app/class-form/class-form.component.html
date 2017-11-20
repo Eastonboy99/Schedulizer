@@ -74,3 +74,13 @@
   <p>Form status: {{ classForm.status | json }}</p>
 </form>
 
+<div *ngIf="eventsSchedules">
+  hello
+  <div *ngFor="let schedule of eventsSchedules; let l=index">
+      <app-schedules-display [events]="schedule"></app-schedules-display>
+  </div>
+  
+</div>
+
+
+

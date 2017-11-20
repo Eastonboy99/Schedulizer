@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import {ScheduleModule} from 'primeng/primeng';
+import * as Sugar from 'sugar';
 
-import { Section } from '../section'
-import { Time } from '../time'
-import { StudentClass } from '../student-class';
 
 @Component({
   selector: 'app-class-form',
@@ -111,11 +108,18 @@ export class ClassFormComponent implements OnInit {
     // Create all possible sections
     for (let student_class of classes) {
       for (let section of student_class.sections) {
+        let times = []
+        for (let time of section.times) {
+          times.push({
+            start_time: Sugar.Date.create(time.day + ' ' + time.start_time).toISOString(),
+            end_time: Sugar.Date.create(time.day + ' ' + time.end_time).toISOString()
+          })
+        }
         sections.push({
           id: class_counter,
           class_name: student_class.name,
           section_name: section.name,
-          times: section.times.slice()
+          times: times
         })
         class_counter++
       }
@@ -198,6 +202,23 @@ export class ClassFormComponent implements OnInit {
       schedules.push(new_schedule)
     }
     console.log(schedules)
+    let eventsSchedules = []
+    let counter = 0;
+    for (let schedule of schedules[schedules.length - 1]) {
+      eventsSchedules.push([])
+      for (let college_class of schedule) {
+        for (let time of college_class.times) {
+          eventsSchedules[counter].push({
+            title: college_class.class_name,
+            start: time.start_time,
+            end: time.end_time
+          })
+        }
+      }
+      counter++;
+    }
+    console.log(eventsSchedules)
+    
   }
 
   arraysEqual(arr1, arr2) {
