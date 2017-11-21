@@ -16,7 +16,7 @@ export class ClassFormComponent implements OnInit {
   eventsSchedules: any;
   constructor(private fb: FormBuilder) {
     this.createForm()
-    this.debug()
+    // this.debug()
   }
 
   // createForm() {

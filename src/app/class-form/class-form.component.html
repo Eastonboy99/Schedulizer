@@ -1,87 +1,115 @@
-<form [formGroup]="classForm" novalidate>
-  <div formArrayName="classes" class="well well-lg">
-    <div *ngFor="let student_class of classes.controls; let i=index" [formGroupName]="i">
-      <h4>Class #{{i + 1}}</h4>
-      <div class="form-group">
-        <label class="center-block">Name:
-          <input class="form-control" formControlName="name">
+<div class="table-responsive">
 
-        </label>
-        <div class="form-group">
-          <label class="center-block">Priority:
-            <input type="number" class="form-control" formControlName="priority">
-          </label>
-        </div>
-      </div>
-      <div formArrayName="sections" class="well well-lg">
-        <div *ngFor="let section of student_class.controls.sections.controls; let j=index" [formGroupName]='j'>
-          <h4>Section #{{j + 1}}</h4>
-          <div style="margin-left: 1em;">
-            <div class="form-group">
-              <label class="center-block">Section Name:
-                <input class="form-control" formControlName="name">
-              </label>
-            </div>
-            <div formArrayName="times" class="well well-lg">
-              <div *ngFor="let time of section.controls.times.controls; let k=index" [formGroupName]="k">
-                <h4>Time #{{k + 1}}</h4>
-                <div style="margin-left: 1em;">
-                  <div class="form-group">
-                    <label class="center-block">Select a day:
-                      <select class="form-control" formControlName="day">
-                        <option>Sunday</option>
-                        <option>Monday</option>
-                        <option>Tuesday</option>
-                        <option>Wednesday</option>
-                        <option>Thursday</option>
-                        <option>Friday</option>
-                        <option>Saturday</option>
-                      </select>
-                    </label>
-                    <label class="center-block">Start Time:
-                      <input type="time" class="form-control" formControlName="start_time">
-                    </label>
-                    <label class="center-block">End Time:
-                      <input type="time" class="form-control" formControlName="end_time">
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <button (click)="addTime(i, j)" class="btn btn-default" type="button">Add Time</button>
-            </div>
+  <form [formGroup]="classForm" novalidate>
+    <table class="table table-striped " formArrayName="classes">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Class Name</th>
+          <th>Sections</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student_class of classes.controls; let i=index" [formGroupName]="i">
+          <td>{{i + 1}}</td>
+          <td>
+            <input class="form-control" placeholder="Class Name" formControlName="name">
+          </td>
 
-          </div>
+          <td formArrayName="sections">
+            <table class="table table-striped ">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Section Name</th>
+                  <th>Times</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let section of student_class.controls.sections.controls; let j=index" [formGroupName]='j'>
+                  <td>{{j + 1}}</td>
+                  
+                    <td>
+                      <input class="form-control" placeholder="Section Name" formControlName="name">
+                    </td>
+                    <td formArrayName="times">
+                      <table class="table table-striped ">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Day</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                          </tr>
+                        </thead>
+                        <tr *ngFor="let time of section.controls.times.controls; let last = last;let k=index" [formGroupName]="k">
+                          <td>{{k + 1}}</td>
+                          <td>
+                              <select class="form-control" formControlName="day">
+                                <option>Sunday</option>
+                                <option>Monday</option>
+                                <option>Tuesday</option>
+                                <option>Wednesday</option>
+                                <option>Thursday</option>
+                                <option>Friday</option>
+                                <option>Saturday</option>
+                              </select>
+                          </td>
+                          <td>
+                              <input type="time" class="form-control" formControlName="start_time">
+                          </td>
+                          <td>
+                              <input type="time" class="form-control" formControlName="end_time">
+                          </td>
+                          <!-- <td *ngIf="last">
+                            <button (click)="addTime(i, j)" class="btn btn-default" type="button">Add Time</button>
+                          </td> -->
+                        </tr>
+                        <tr>
+                          <td colspan="4">
+                              <button (click)="addTime(i, j)" class="btn btn-default float-right" type="button">Add Time</button>
+                          </td>
+                        </tr>
 
-        </div>
-        <button (click)="addSection(i)" class="btn btn-default" type="button">Add Section</button>
-      </div>
+                      </table>
+
+                    </td>
+
+
+                </tr>
+              </tbody>
+
+            </table>
+            <button (click)="addSection(i)" class="btn btn-default" type="button">Add Section</button>
+          </td>
+
+        </tr>
+      </tbody>
+      <button (click)="addClass()" class="btn btn-default" type="button">Add Class</button>
+
+
+
+      <!-- <p>Form value: {{ classForm.value | json }}</p>
+  <p>Form status: {{ classForm.status | json }}</p> -->
+    </table>
+    <div class="form-group">
+      <label class="center-block">Max Number of Classes:
+        <select class="form-control" formControlName="classes_per_schedule">
+          <option *ngFor="let student_class of classes.controls; let l=index" [value]="l">{{l + 1}}</option>
+        </select>
+      </label>
 
     </div>
-    <button (click)="addClass()" class="btn btn-default" type="button">Add Class</button>
-  </div>
-  <div class="form-group">
-    <label class="center-block">Max Number of Classes:
-      <select class="form-control" formControlName="classes_per_schedule">
-        <option *ngFor="let student_class of classes.controls; let l=index" [value]="l">{{l + 1}}</option>
-      </select>
-    </label>
 
-  </div>
+    <button (click)="generateSchedules()" class="btn btn-info" type="button">Generate!</button>
+  </form>
 
-  <button (click)="generateSchedules()" class="btn btn-info" type="button">Generate!</button>
-
-  <!-- <p>Form value: {{ classForm.value | json }}</p>
-  <p>Form status: {{ classForm.status | json }}</p> -->
-</form>
-
+</div>
 <div *ngIf="eventsSchedules">
   hello
   <div *ngFor="let schedule of eventsSchedules; let l=index">
     <!-- <p>Schedule: {{schedule | json }}</p> -->
-      <app-schedules-display [options]="schedule"></app-schedules-display>
+    <app-schedules-display [options]="schedule"></app-schedules-display>
   </div>
-  
+
 </div>
-
-
-
