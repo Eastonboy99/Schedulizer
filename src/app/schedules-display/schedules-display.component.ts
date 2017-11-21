@@ -21,6 +21,7 @@ export class SchedulesDisplayComponent {
   // };
   
   onCalendarInit(initialized: boolean) {
-    console.log('Calendar initialized');
+    console.log('Calendar initialized'); 
+    console.log(this.calendarOptions)
   }
 }

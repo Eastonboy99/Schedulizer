@@ -112,8 +112,8 @@ export class ClassFormComponent implements OnInit {
         let times = []
         for (let time of section.times) {
           times.push({
-            start_time: Sugar.Date.create(time.day + ' ' + time.start_time).toISOString(),
-            end_time: Sugar.Date.create(time.day + ' ' + time.end_time).toISOString()
+            start_time: Sugar.Date.create(time.day + ' ' + time.start_time),
+            end_time: Sugar.Date.create(time.day + ' ' + time.end_time)
           })
         }
         sections.push({
@@ -218,9 +218,10 @@ export class ClassFormComponent implements OnInit {
       for (let college_class of schedule) {
         for (let time of college_class.times) {
           this.eventsSchedules[counter].events.push({
-            title: college_class.class_name,
+            title: college_class.class_name + " - " + college_class.section_name,
             start: time.start_time,
-            end: time.end_time
+            end: time.end_time,
+            timezone: 'America/New_York'
           })
         }
       }
@@ -230,9 +231,7 @@ export class ClassFormComponent implements OnInit {
 
   }
 
-  getEventsSchedules() {
-    return this.eventsSchedules
-  }
+
 
   arraysEqual(arr1, arr2) {
     if (arr1.length !== arr2.length)
