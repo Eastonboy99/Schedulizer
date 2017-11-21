@@ -70,15 +70,15 @@
 
   <button (click)="generateSchedules()" class="btn btn-info" type="button">Generate!</button>
 
-  <p>Form value: {{ classForm.value | json }}</p>
-  <p>Form status: {{ classForm.status | json }}</p>
+  <!-- <p>Form value: {{ classForm.value | json }}</p>
+  <p>Form status: {{ classForm.status | json }}</p> -->
 </form>
 
 <div *ngIf="eventsSchedules">
   hello
   <div *ngFor="let schedule of eventsSchedules; let l=index">
-    <p>Schedule: {{schedule | json }}</p>
-      <app-schedules-display [calendarOptions]="schedule"></app-schedules-display>
+    <!-- <p>Schedule: {{schedule | json }}</p> -->
+      <app-schedules-display [options]="schedule"></app-schedules-display>
   </div>
   
 </div>
