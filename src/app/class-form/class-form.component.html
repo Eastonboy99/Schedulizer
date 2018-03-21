@@ -102,11 +102,12 @@
     </div>
 
     <button (click)="generateSchedules()" class="btn btn-info" type="button">Generate!</button>
+    <button (click)="clearSchedules()" class="btn btn-info" type="button">Clear</button>
+    
   </form>
 
 </div>
 <div *ngIf="eventsSchedules">
-  hello
   <div *ngFor="let schedule of eventsSchedules; let l=index">
     <!-- <p>Schedule: {{schedule | json }}</p> -->
     <app-schedules-display [options]="schedule"></app-schedules-display>

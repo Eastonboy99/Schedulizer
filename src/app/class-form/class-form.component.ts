@@ -16,7 +16,7 @@ export class ClassFormComponent implements OnInit {
   eventsSchedules: any;
   constructor(private fb: FormBuilder) {
     this.createForm()
-    // this.debug()
+    this.debug()
   }
 
   // createForm() {
@@ -102,8 +102,8 @@ export class ClassFormComponent implements OnInit {
 
   generateSchedules() {
     const classes = this.classes.value
-    let sections = []
-    let schedules = []
+    let sections = [] // list of sections to use in the schedules
+    let schedules = [] // already generated schedules
     let class_counter = 0
 
     // Create all possible sections
@@ -136,20 +136,22 @@ export class ClassFormComponent implements OnInit {
         }
       } else {
         for (let schedule of schedules[i - 1]) {
-          for (let scheduled_section of schedule) {
-            for (let section of sections) {
-              // if they are the same class, skip
-              if (section.class_name.toLowerCase() == scheduled_section.class_name.toLowerCase()) {
-                continue;
-              }
+          let same = false;
+          for (let section of sections) {
+            for (let scheduled_section of schedule) {
 
+              // if they are the same class, skip
+              if (section.id == scheduled_section.id) {
+                same = true;
+                break;
+              }
               let conflicts = false
               let temp_schedule = schedule.slice()
               // Check to make sure times dont conflict
-              for (let scheduled_section_time of scheduled_section.times) {
-                for (let section_time of section.times) {
+              for (let section_time of section.times) {
+                for (let scheduled_section_time of scheduled_section.times) {
                   if (scheduled_section_time.day == section_time.day) {
-                    if (scheduled_section_time.start_time <= section_time.start_time && section_time.start_time <= scheduled_section_time.end_time || scheduled_section_time.start_time <= section_time.end_time && section_time.end_time <= scheduled_section_time.end_time) {
+                    if (section_time.start_time >= scheduled_section_time.start_time && section_time.start_time <= scheduled_section_time.end_time || section_time.end_time >= scheduled_section_time.start_time && section_time.end_time <= scheduled_section_time.end_time) {
                       conflicts = true;
                       break;
                     }
@@ -157,45 +159,45 @@ export class ClassFormComponent implements OnInit {
                 }
                 if (conflicts) break;
               }
-              if (conflicts)
-                continue;
+              if (!conflicts) {
+                temp_schedule.push(section)
 
-              temp_schedule.push(section)
+                // Remove duplicate Schedules
+                let sorted_schedule = temp_schedule.sort((obj1, obj2) => {
+                  if (obj1.id > obj2.id) {
+                    return 1;
+                  }
 
-              // Remove duplicate Schedules
-              let sorted_schedule = temp_schedule.sort((obj1, obj2) => {
-                if (obj1.id > obj2.id) {
-                  return 1;
+                  if (obj1.id < obj2.id) {
+                    return -1;
+                  }
+
+                  return 0;
+                })
+                let push = true
+                let sorted_keys = []
+                for (let sorted_schedule_class of sorted_schedule) {
+                  sorted_keys.push(sorted_schedule_class.id)
                 }
+                for (let check_schedule of new_schedule) {
+                  let key = []
+                  for (let classes of check_schedule) {
+                    key.push(classes.id)
+                  }
 
-                if (obj1.id < obj2.id) {
-                  return -1;
+
+                  if (this.arraysEqual(key, sorted_keys)) {
+                    push = false;
+                    break;
+                  }
                 }
-
-                return 0;
-              })
-              let push = true
-              let sorted_keys = []
-              for (let sorted_schedule_class of sorted_schedule) {
-                sorted_keys.push(sorted_schedule_class.id)
-              }
-              for (let check_schedule of new_schedule) {
-                let key = []
-                for (let classes of check_schedule) {
-                  key.push(classes.id)
+                if (push) {
+                  new_schedule.push(sorted_schedule)
                 }
-
-
-                if (this.arraysEqual(key, sorted_keys)) {
-                  push = false;
-                  break;
-                }
-              }
-              if (push) {
-                new_schedule.push(sorted_schedule)
               }
 
             }
+            if (same) break;
           }
         }
 
@@ -230,7 +232,10 @@ export class ClassFormComponent implements OnInit {
     console.log(this.eventsSchedules)
 
   }
+  clearSchedules() {
+    this.eventsSchedules = []
 
+  }
 
 
   arraysEqual(arr1, arr2) {
