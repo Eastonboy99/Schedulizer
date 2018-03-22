@@ -20,7 +20,7 @@ export class SchedulesDisplayComponent implements AfterViewInit {
 
   ngAfterViewInit(){
     setTimeout(()=>{
-      console.log("100ms after ngAfterViewInit ");
+      // console.log("100ms after ngAfterViewInit ");
       $(this.element.nativeElement).fullCalendar(this.options);
       this.initialized.emit(true);
     }, 100)
