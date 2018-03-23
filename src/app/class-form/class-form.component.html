@@ -112,7 +112,7 @@
     <!-- <p>Schedule: {{schedule | json }}</p> -->
     <div id="schedule{{l}}">
       <h2>Schedule {{l+1}}</h2>
-      <button (click)="print(l)" class="float-right">Print</button>
+      <a routerLink="/print/{{l}}" target="_blank" class="btn btn-info float-right">Print</a>
       <app-schedules-display [options]="schedule"></app-schedules-display>
     </div>
 

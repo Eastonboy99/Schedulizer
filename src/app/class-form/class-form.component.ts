@@ -104,7 +104,7 @@ export class ClassFormComponent implements OnInit {
   generateSchedules() {
     const classes = this.classes.value
     this.schedules.generateSchedules(classes, this.classForm.value.classes_per_schedule);
-    this.eventsSchedules = this.schedules.getSchedules;
+    this.eventsSchedules = this.schedules.getSchedules();
   
   }
   clearSchedules() {

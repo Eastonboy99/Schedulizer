@@ -4,11 +4,18 @@ import * as Sugar from 'sugar';
 export class ScheduleService {
   private eventsSchedules: any
   constructor() {
-    this.eventsSchedules = []
+    this.eventsSchedules = localStorage.getItem("schedules")
+    if(this.eventsSchedules){
+      this.eventsSchedules = JSON.parse(this.eventsSchedules)
+    }
    }
 
    getSchedules(){
      return this.eventsSchedules
+   }
+   getSchedule(id){
+     console.log(this.eventsSchedules)
+      return this.eventsSchedules[id]
    }
   generateSchedules(classes, classes_per_schedule){
     let sections = [] // list of sections to use in the schedules
@@ -117,17 +124,23 @@ export class ScheduleService {
       }
       schedules.push(new_schedule)
     }
-    console.log(schedules)
+    // console.log(schedules)
     this.eventsSchedules = []
     let counter = 0;
     for (let schedule of schedules[schedules.length - 1]) {
       this.eventsSchedules.push({
-        height: 650,
+        height: 'auto',
         fixedWeekCount: false,
         eventLimit: true, // allow "more" link when too many events
         defaultView: 'agendaWeek',
         minTime: "07:00:00",
         maxTime: "23:00:00",
+        // customButtons: {
+        //   print: {
+        //     text: 'print',
+        //     click: window.location.href='/print/'+counter
+        //   }
+        // },
         header: {
           left: '',
           center: '',
@@ -149,7 +162,7 @@ export class ScheduleService {
       counter++;
     }
     // console.log(this.eventsSchedules)
-
+    localStorage.setItem("schedules", JSON.stringify(this.eventsSchedules));
   }
 
   arraysEqual(arr1, arr2) {

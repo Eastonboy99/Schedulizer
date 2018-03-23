@@ -19,7 +19,8 @@ import { ScheduleService } from './schedule.service';
   ],
   imports: [
     BrowserModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
   providers: [ScheduleService],
   bootstrap: [AppComponent]
