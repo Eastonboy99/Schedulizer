@@ -2,5 +2,5 @@
 <!-- <h2>Schedule {{l+1}}</h2> -->
 <div *ngIf="schedule">
     <h2>Schedule {{id+1}}</h2>
-  <app-schedules-display [options]="schedule"></app-schedules-display>
+  <app-schedules-display (initialized)="print()" [options]="schedule"></app-schedules-display>
 </div>

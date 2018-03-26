@@ -113,9 +113,11 @@
     <div id="schedule{{l}}">
       <h2>Schedule {{l+1}}</h2>
       <a routerLink="/print/{{l}}" target="_blank" class="btn btn-info float-right">Print</a>
+      <!-- <button (click)="printPreview(l)" class="float-right">Print</button> -->
       <app-schedules-display [options]="schedule"></app-schedules-display>
     </div>
 
   </div>
 
 </div>
+

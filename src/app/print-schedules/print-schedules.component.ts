@@ -16,7 +16,7 @@ export class PrintSchedulesComponent implements AfterViewInit {
 
   ngAfterViewInit() {
 
-    this.print();
+    // this.print();
 
   }
 
@@ -28,7 +28,7 @@ export class PrintSchedulesComponent implements AfterViewInit {
   }
   print() {
     window.print();
-    window.onfocus=function(){ window.close();}
+    window.close();
   }
 
 

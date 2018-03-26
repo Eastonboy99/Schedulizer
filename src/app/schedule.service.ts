@@ -20,7 +20,8 @@ export class ScheduleService {
   generateSchedules(classes, classes_per_schedule){
     let sections = [] // list of sections to use in the schedules
     let schedules = [] // already generated schedules
-    let class_counter = 0
+    let class_counter = 0;
+    let section_counter = 0;
 
     // Create all possible sections
     for (let student_class of classes) {
@@ -33,14 +34,15 @@ export class ScheduleService {
           })
         }
         sections.push({
-          id: class_counter,
+          id: section_counter,
+          class_id: class_counter,
           class_name: student_class.name,
           section_name: section.name,
           times: times
         })
-        class_counter++
+        section_counter++
       }
-
+      class_counter++
     }
 
     // Create all possible Schedule Combinations
@@ -59,7 +61,7 @@ export class ScheduleService {
             for (let scheduled_section of schedule) {
 
               // if they are the same class, skip
-              if (section.id == scheduled_section.id) {
+              if (section.class_id == scheduled_section.class_id) {
                 same = true;
                 break;
               }
@@ -124,7 +126,7 @@ export class ScheduleService {
       }
       schedules.push(new_schedule)
     }
-    // console.log(schedules)
+    console.log(schedules)
     this.eventsSchedules = []
     let counter = 0;
     for (let schedule of schedules[schedules.length - 1]) {

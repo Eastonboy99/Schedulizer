@@ -102,6 +102,7 @@ export class ClassFormComponent implements OnInit {
   }
 
   generateSchedules() {
+    this.clearSchedules();
     const classes = this.classes.value
     this.schedules.generateSchedules(classes, this.classForm.value.classes_per_schedule);
     this.eventsSchedules = this.schedules.getSchedules();
@@ -111,25 +112,8 @@ export class ClassFormComponent implements OnInit {
     this.eventsSchedules = []
 
   }
-  print(id): void {
-    let printContents, popupWin;
-    printContents = document.getElementById("schedule"+id).innerHTML;
-    popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
-    popupWin.document.open();
-    popupWin.document.write(`
-      <html>
-        <head>
-          <title>Print tab</title>
-          <style>
-          //........Customized style.......
-          </style>
-          <link href="../../styles.css"/>
-        </head>
-    <body onload="window.print();">${printContents}</body>
-      </html>`
-    );
-    popupWin.document.close();
-}s
+  
+  
 
   ngOnInit() {
     // this.classes.push(this.fb.group(new StudentClass()))
