@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormArray, Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import * as Sugar from 'sugar';
 import { ScheduleService } from '../schedule.service';
@@ -9,32 +9,15 @@ import { ScheduleService } from '../schedule.service';
   templateUrl: './class-form.component.html',
   styleUrls: ['./class-form.component.css']
 })
-export class ClassFormComponent implements OnInit {
-  classForm: FormGroup;
-  classesArray: FormArray;
-  sectionArray: FormArray;
-  timeArray: FormArray;
-  eventsSchedules: any;
+export class ClassFormComponent implements AfterViewInit {
+  classForm: FormGroup; // the form group to hold the data
+  eventsSchedules: any; // generated schedules
   constructor(private fb: FormBuilder, private schedules: ScheduleService) {
     this.createForm();
     this.getPreviousClasses();
     // this.debug()
   }
-
-  // createForm() {
-  //   this.timeArray = new FormArray([])
-  //   this.timeArray.push(this.fb.group(new Time()))
-  //   this.sectionArray = new FormArray([])
-  //   this.sectionArray.push(this.fb.group(new Section(this.timeArray)))
-  //   this.classesArray = new FormArray([])
-  //   this.classesArray.push(this.fb.group(new StudentClass(this.sectionArray)))
-
-  //   this.classForm = this.fb.group({
-  //     classes: this.classesArray
-  //   })
-
-  // }
-
+  // Creates Form so store data in
   createForm() {
     this.classForm = this.fb.group({
       classes: this.fb.array([
@@ -43,26 +26,35 @@ export class ClassFormComponent implements OnInit {
       classes_per_schedule: 0
     })
   }
+  // gets classes previously entered from cookies
   getPreviousClasses() {
-    let local_classes = localStorage.getItem("classes");
-    let classes = JSON.parse(local_classes);
+    let local_classes = localStorage.getItem("classes"); // classes from cookie to be parsed by json
+    let classes = JSON.parse(local_classes);// parsed classes from cookie
+
     if (classes) {
-      let class_counter = 0;
-      for (let saved_class of classes) {
-        this.addClass();
-        let section_counter = 0;
-        for(let section of saved_class.sections){
-          this.addSection(class_counter);
-          for(let time of section.times){
-            this.addTime(class_counter, section_counter)
+      let class_counter = 0; // tracker for the current class
+      for (let saved_class of classes.classes) {
+        if (class_counter != 0)
+          this.addClass();
+        let section_counter = 0; // tracker for current section
+        for (let section of saved_class.sections) {
+          if (section_counter != 0)
+            this.addSection(class_counter);
+          let time_counter = 0; // tracker for current time
+          for (let time of section.times) {
+            if (time_counter != 0)
+              this.addTime(class_counter, section_counter)
+            time_counter++;
           }
           section_counter++;
         }
         class_counter++;
       }
+      this.classForm.setValue(classes);
     }
-    this.classForm.setValue(classes);
+
   }
+  // creates the class form controller
   initClass() {
     return this.fb.group({
       name: ['', Validators.required],
@@ -72,7 +64,7 @@ export class ClassFormComponent implements OnInit {
       ])
     })
   }
-
+  // creates the section form controller
   initSection() {
     return this.fb.group({
       name: ['', Validators.required],
@@ -81,7 +73,7 @@ export class ClassFormComponent implements OnInit {
       ])
     })
   }
-
+  // creates the time form controller
   initTime() {
     return this.fb.group({
       day: ['Sunday', Validators.required],
@@ -89,26 +81,26 @@ export class ClassFormComponent implements OnInit {
       end_time: ['', Validators.required],
     })
   }
-
+  // returns classes from form
   get classes(): FormArray {
     return this.classForm.get('classes') as FormArray;
   };
-
+  // addeds a class to the form on view
   addClass() {
     const control = <FormArray>this.classes
     control.push(this.initClass())
   }
-
+  // adds a section to the form on the view
   addSection(class_number: number) {
     const control = <FormArray>this.classes.controls[class_number]['controls'].sections
     control.push(this.initSection())
   }
-
+  // adds a time to the form on the view
   addTime(class_number: number, section_number: number) {
     const control = <FormArray>this.classes.controls[class_number]['controls'].sections['controls'][section_number]['controls'].times
     control.push(this.initTime())
   }
-
+  // used to debug by providing test data
   debug() {
     this.addClass()
     this.addSection(0)
@@ -119,35 +111,25 @@ export class ClassFormComponent implements OnInit {
     this.addSection(1)
 
     this.classForm.setValue({ "classes": [{ "name": "CS108", "priority": 1, "sections": [{ "name": "Morning", "times": [{ "day": "Monday", "start_time": "10:40", "end_time": "11:50" }, { "day": "Wednesday", "start_time": "10:40", "end_time": "11:50" }, { "day": "Friday", "start_time": "10:40", "end_time": "11:50" }] }, { "name": "Afternoon", "times": [{ "day": "Tuesday", "start_time": "14:00", "end_time": "16:00" }, { "day": "Thursday", "start_time": "14:00", "end_time": "16:00" }] }] }, { "name": "HIS108", "priority": 2, "sections": [{ "name": "Conflicts", "times": [{ "day": "Monday", "start_time": "11:00", "end_time": "12:00" }] }, { "name": "No Conflicts", "times": [{ "day": "Monday", "start_time": "14:02", "end_time": "15:00" }] }] }], "classes_per_schedule": "1" })
-  }
 
+  }
+  // uses schedules service to generate all possible schedules
   generateSchedules() {
     this.clearSchedules();
     const classes = this.classes.value
-    localStorage.setItem("classes", JSON.stringify(classes));
     this.schedules.generateSchedules(classes, this.classForm.value.classes_per_schedule);
     this.eventsSchedules = this.schedules.getSchedules();
 
   }
+  // clears generated schedules
   clearSchedules() {
     this.eventsSchedules = []
 
   }
-
-
-
-  ngOnInit() {
-    // this.classes.push(this.fb.group(new StudentClass()))
-    // for (let student_class of this.classes.controls) {
-    //   console.log(student_class)
-    //   for (let section of student_class.value.sections.controls) {
-    //     console.log(section)
-    //     for (let time of section.controls.times.controls) {
-    //       console.log(time)
-    //     }
-    //   }
-    // }
-    // console.log(this.classes)
+  ngAfterViewInit() {
+    this.classForm.valueChanges.subscribe(classes => {
+      localStorage.setItem("classes", JSON.stringify(classes));
+    })
   }
 
 }
