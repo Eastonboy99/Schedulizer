@@ -2,26 +2,28 @@ import { Injectable } from '@angular/core';
 import * as Sugar from 'sugar';
 @Injectable()
 export class ScheduleService {
-  private eventsSchedules: any
+  private eventsSchedules: any // generated schedules
   constructor() {
     this.eventsSchedules = localStorage.getItem("schedules")
-    if(this.eventsSchedules){
+    if (this.eventsSchedules) {
       this.eventsSchedules = JSON.parse(this.eventsSchedules)
     }
-   }
-
-   getSchedules(){
-     return this.eventsSchedules
-   }
-   getSchedule(id){
-     console.log(this.eventsSchedules)
-      return this.eventsSchedules[id]
-   }
-  generateSchedules(classes, classes_per_schedule){
+  }
+  // returns generated schedules
+  getSchedules() {
+    return this.eventsSchedules
+  }
+  // returns specific schedule 
+  getSchedule(id) {
+    console.log(this.eventsSchedules)
+    return this.eventsSchedules[id]
+  }
+  // generates all possible schedules
+  generateSchedules(classes, classes_per_schedule) {
     let sections = [] // list of sections to use in the schedules
     let schedules = [] // already generated schedules
-    let class_counter = 0;
-    let section_counter = 0;
+    let class_counter = 0; // counter for current class
+    let section_counter = 0; // counter for current section
 
     // Create all possible sections
     for (let student_class of classes) {
@@ -53,20 +55,20 @@ export class ScheduleService {
           new_schedule.push([section])
         }
       } else {
+        // schedule = current schedule to check
         for (let schedule of schedules[i - 1]) {
           let same = false;
+          // section = current section to compair to schedule to see if it fits
           for (let section of sections) {
             let conflicts = false
-            let temp_schedule = schedule.slice()
+            let temp_schedule = schedule.slice() // the current schedule to add to if possible
+            // schedule_section = current section in the current schedule to compair to the current section
             for (let scheduled_section of schedule) {
-
               // if they are the same class, skip
               if (section.class_id == scheduled_section.class_id) {
                 same = true;
                 break;
               }
-
-
               // Check to make sure times dont conflict
               for (let section_time of section.times) {
                 for (let scheduled_section_time of scheduled_section.times) {
@@ -84,17 +86,14 @@ export class ScheduleService {
             }
             if (!conflicts && !same) {
               temp_schedule.push(section)
-
               // Remove duplicate Schedules
               let sorted_schedule = temp_schedule.sort((obj1, obj2) => {
                 if (obj1.id > obj2.id) {
                   return 1;
                 }
-
                 if (obj1.id < obj2.id) {
                   return -1;
                 }
-
                 return 0;
               })
               let push = true
@@ -107,8 +106,6 @@ export class ScheduleService {
                 for (let classes of check_schedule) {
                   key.push(classes.id)
                 }
-
-
                 if (this.arraysEqual(key, sorted_keys)) {
                   push = false;
                   break;
@@ -118,7 +115,6 @@ export class ScheduleService {
                 new_schedule.push(sorted_schedule)
               }
             }
-
             if (same) break;
           }
         }
@@ -126,7 +122,6 @@ export class ScheduleService {
       }
       schedules.push(new_schedule)
     }
-    console.log(schedules)
     this.eventsSchedules = []
     let counter = 0;
     for (let schedule of schedules[schedules.length - 1]) {
@@ -163,10 +158,9 @@ export class ScheduleService {
       }
       counter++;
     }
-    // console.log(this.eventsSchedules)
     localStorage.setItem("schedules", JSON.stringify(this.eventsSchedules));
   }
-
+  // check to see if arrays are the same to remove duplicate schedules
   arraysEqual(arr1, arr2) {
     if (arr1.length !== arr2.length)
       return false;
@@ -174,7 +168,6 @@ export class ScheduleService {
       if (arr1[i] !== arr2[i])
         return false;
     }
-
     return true;
   }
 }

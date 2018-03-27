@@ -13,7 +13,6 @@ import {Options} from "fullcalendar";
 export class SchedulesDisplayComponent implements AfterViewInit {
   @Input() options: Options;
   @Output() initialized: EventEmitter<boolean> = new EventEmitter<boolean>();
-  text: string;
 
   constructor(private element:ElementRef) {
   }
@@ -25,7 +24,6 @@ export class SchedulesDisplayComponent implements AfterViewInit {
       this.initialized.emit(true);
     }, 100)
   }
-
 
   fullCalendar(...args: any[]): any {
     if (!args) {
