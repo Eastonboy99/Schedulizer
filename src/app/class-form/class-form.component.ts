@@ -16,8 +16,9 @@ export class ClassFormComponent implements OnInit {
   timeArray: FormArray;
   eventsSchedules: any;
   constructor(private fb: FormBuilder, private schedules: ScheduleService) {
-    this.createForm()
-    this.debug()
+    this.createForm();
+    this.getPreviousClasses();
+    // this.debug()
   }
 
   // createForm() {
@@ -42,7 +43,26 @@ export class ClassFormComponent implements OnInit {
       classes_per_schedule: 0
     })
   }
-
+  getPreviousClasses() {
+    let local_classes = localStorage.getItem("classes");
+    let classes = JSON.parse(local_classes);
+    if (classes) {
+      let class_counter = 0;
+      for (let saved_class of classes) {
+        this.addClass();
+        let section_counter = 0;
+        for(let section of saved_class.sections){
+          this.addSection(class_counter);
+          for(let time of section.times){
+            this.addTime(class_counter, section_counter)
+          }
+          section_counter++;
+        }
+        class_counter++;
+      }
+    }
+    this.classForm.setValue(classes);
+  }
   initClass() {
     return this.fb.group({
       name: ['', Validators.required],
@@ -104,16 +124,17 @@ export class ClassFormComponent implements OnInit {
   generateSchedules() {
     this.clearSchedules();
     const classes = this.classes.value
+    localStorage.setItem("classes", JSON.stringify(classes));
     this.schedules.generateSchedules(classes, this.classForm.value.classes_per_schedule);
     this.eventsSchedules = this.schedules.getSchedules();
-  
+
   }
   clearSchedules() {
     this.eventsSchedules = []
 
   }
-  
-  
+
+
 
   ngOnInit() {
     // this.classes.push(this.fb.group(new StudentClass()))
