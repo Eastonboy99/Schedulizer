@@ -17,7 +17,7 @@ export class ClassFormComponent implements AfterViewInit {
     this.getPreviousClasses();
     // this.debug()
   }
-  // Creates Form so store data in
+  // Creates Form to store data in
   createForm() {
     this.classForm = this.fb.group({
       classes: this.fb.array([
@@ -117,6 +117,7 @@ export class ClassFormComponent implements AfterViewInit {
   generateSchedules() {
     this.clearSchedules();
     const classes = this.classes.value
+    localStorage.setItem("classes", JSON.stringify(this.classForm.value));
     this.schedules.generateSchedules(classes, this.classForm.value.classes_per_schedule);
     this.eventsSchedules = this.schedules.getSchedules();
 
@@ -124,7 +125,13 @@ export class ClassFormComponent implements AfterViewInit {
   // clears generated schedules
   clearSchedules() {
     this.eventsSchedules = []
-
+    this.schedules.clearSchedules()
+    
+  }
+  clearClasses(){
+    // this.classForm.setValue(null);
+    localStorage.setItem("classes",null);
+    this.createForm();
   }
   ngAfterViewInit() {
     this.classForm.valueChanges.subscribe(classes => {

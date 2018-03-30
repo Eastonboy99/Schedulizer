@@ -160,6 +160,10 @@ export class ScheduleService {
     }
     localStorage.setItem("schedules", JSON.stringify(this.eventsSchedules));
   }
+  // clear schedules from local storage 
+  clearSchedules(){
+  localStorage.setItem("schedules", null);
+  }
   // check to see if arrays are the same to remove duplicate schedules
   arraysEqual(arr1, arr2) {
     if (arr1.length !== arr2.length)
