@@ -24,6 +24,7 @@
     "@types/fullcalendar": "3.5.1",
     "@types/jquery": "3.2.16",
     "core-js": "^2.4.1",
+    "font-awesome": "^4.7.0",
     "fullcalendar": "3.4.0",
     "primeng": "^5.0.0-rc.0",
     "rxjs": "^5.1.0",

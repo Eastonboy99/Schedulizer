@@ -122,15 +122,30 @@ export class ClassFormComponent implements AfterViewInit {
     this.eventsSchedules = this.schedules.getSchedules();
 
   }
+  // removes class from Form
+  removeClass(class_id: number) {
+    const control = <FormArray>this.classes
+    control.removeAt(class_id)
+  }
+  // removes section from class
+  removeSection(class_id: number, section_id: number) {
+    const control = <FormArray>this.classes.controls[class_id]['controls'].sections
+    control.removeAt(section_id)
+  }
+  // removes time from section
+  removeTime(class_id: number, section_id: number, time_id: number) {
+    const control = <FormArray>this.classes.controls[class_id]['controls'].sections['controls'][section_id]['controls'].times
+    control.removeAt(time_id)
+  }
   // clears generated schedules
   clearSchedules() {
     this.eventsSchedules = []
     this.schedules.clearSchedules()
-    
+
   }
-  clearClasses(){
+  clearClasses() {
     // this.classForm.setValue(null);
-    localStorage.setItem("classes",null);
+    localStorage.setItem("classes", null);
     this.createForm();
   }
   ngAfterViewInit() {

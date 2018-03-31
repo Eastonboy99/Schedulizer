@@ -7,6 +7,7 @@
           <th>#</th>
           <th>Class Name</th>
           <th>Sections</th>
+          <th>Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +24,7 @@
                   <th>#</th>
                   <th>Section Name</th>
                   <th>Times</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -40,9 +42,10 @@
                           <th>Day</th>
                           <th>Start Time</th>
                           <th>End Time</th>
+                          <th>Delete</th>
                         </tr>
                       </thead>
-                      <tr *ngFor="let time of section.controls.times.controls; let last = last;let k=index" [formGroupName]="k">
+                      <tr id="class{{i}}_section{{j}}_time{{k}}" *ngFor="let time of section.controls.times.controls; let last = last;let k=index" [formGroupName]="k">
                         <td>{{k + 1}}</td>
                         <td>
                           <select class="form-control" formControlName="day">
@@ -61,6 +64,9 @@
                         <td>
                           <input type="time" class="form-control" formControlName="end_time">
                         </td>
+                        <td class="remove_things">
+                          <button (click)="removeTime(i,j,k)"class="btn btn-danger" type="button"><i class="fa fa-trash"></i></button>
+                        </td>
                         <!-- <td *ngIf="last">
                             <button (click)="addTime(i, j)" class="btn btn-default" type="button">Add Time</button>
                           </td> -->
@@ -74,6 +80,9 @@
                     </table>
 
                   </td>
+                  <td class="remove_things">
+                    <button (click)="removeSection(i,j)"class="btn btn-danger" type="button"><i class="fa fa-trash"></i></button>
+                  </td>
 
 
                 </tr>
@@ -81,6 +90,9 @@
 
             </table>
             <button (click)="addSection(i)" class="btn btn-default" type="button">Add Section</button>
+          </td>
+          <td cellpadding="0" cellspacing="0" class="remove_things">
+            <button (click)="removeClass(i)"class="btn btn-danger" type="button"><i class="fa fa-trash"></i></button>
           </td>
 
         </tr>
@@ -104,7 +116,7 @@
     <button (click)="generateSchedules()" class="btn btn-info" type="button">Generate!</button>
     <button (click)="clearSchedules()" class="btn btn-warning" type="button">Clear Schedules</button>
     <button (click)="clearClasses()" class="btn btn-danger" type="button">Clear Classes</button>
-    
+
 
   </form>
 
@@ -122,4 +134,3 @@
   </div>
 
 </div>
-
