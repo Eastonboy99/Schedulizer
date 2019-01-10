@@ -7,7 +7,7 @@ import { ScheduleService } from '../schedule.service';
   styleUrls: ['./print-schedules.component.css']
 })
 export class PrintSchedulesComponent implements AfterViewInit {
-  private schedule;
+  public schedule;
   private id: Number;
 
   constructor(private route: ActivatedRoute, private schedules: ScheduleService) {
